@@ -1,4 +1,4 @@
-package com.example.NebulaBackendApp.Model
+package com.example.nebulaBackendApp.Model
 import jakarta.persistence.*
 
 @Entity

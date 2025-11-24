@@ -1,4 +1,4 @@
-package com.example.NebulaBackendApp.Config
+package com.example.nebulaBackendApp.Config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

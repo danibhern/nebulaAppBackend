@@ -1,7 +1,7 @@
-package com.example.NebulaBackendApp.Controller
+package com.example.nebulaBackendApp.Controller
 
-import com.example.NebulaBackendApp.Model.Product
-import com.example.NebulaBackendApp.Service.ProductService
+import com.example.nebulaBackendApp.Model.Product
+import com.example.nebulaBackendApp.Service.ProductService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

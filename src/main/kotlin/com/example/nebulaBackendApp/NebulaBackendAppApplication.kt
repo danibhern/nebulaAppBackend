@@ -1,4 +1,4 @@
-package com.example.NebulaBackendApp
+package com.example.nebulaBackendApp
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
