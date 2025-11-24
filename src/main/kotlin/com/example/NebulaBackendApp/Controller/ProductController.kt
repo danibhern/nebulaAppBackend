@@ -1,8 +1,6 @@
 package com.example.NebulaBackendApp.Controller
 
 import com.example.NebulaBackendApp.Model.Product
-import com.example.NebulaBackendApp.Model.ProductResponseDTO
-import com.example.NebulaBackendApp.Model.toResponseDTO
 import com.example.NebulaBackendApp.Service.ProductService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -13,22 +11,20 @@ import org.springframework.web.bind.annotation.*
 class ProductController(private val productService: ProductService) {
 
     @GetMapping
-    fun getAllProducts(): List<ProductResponseDTO> {
+    fun getAllProducts(): List<Product> {
         return productService.getAllProducts()
-            .map { it.toResponseDTO() }
     }
-
     @PostMapping
-    fun createProduct(@RequestBody product: Product): ResponseEntity<ProductResponseDTO> {
+    fun createProduct(@RequestBody product: Product): ResponseEntity<Product> {
         val newProduct = productService.createProduct(product)
-        return ResponseEntity(newProduct.toResponseDTO(), HttpStatus.CREATED)
+        return ResponseEntity(newProduct, HttpStatus.CREATED)
     }
 
     @GetMapping("/{id}")
-    fun getProductById(@PathVariable id: Long): ResponseEntity<ProductResponseDTO> {
+    fun getProductById(@PathVariable id: Long): ResponseEntity<Product> {
         val product = productService.getProductById(id)
         return product?.let {
-            ResponseEntity.ok(it.toResponseDTO())
+            ResponseEntity.ok(it)
         } ?: ResponseEntity(HttpStatus.NOT_FOUND)
     }
 
@@ -36,7 +32,7 @@ class ProductController(private val productService: ProductService) {
     fun updateProduct(@PathVariable id: Long, @RequestBody productDetails: Product): ResponseEntity<*> {
         return try {
             val updatedProduct = productService.updateProduct(id, productDetails)
-            ResponseEntity.ok(updatedProduct.toResponseDTO())
+            ResponseEntity.ok(updatedProduct)
         } catch (e: RuntimeException) {
             ResponseEntity(e.message, HttpStatus.NOT_FOUND)
         }
