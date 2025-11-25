@@ -4,7 +4,7 @@ package com.example.nebulaBackendApp.Controller
 import com.example.nebulaBackendApp.Model.User
 import com.example.nebulaBackendApp.Model.LoginRequest
 import com.example.nebulaBackendApp.Model.RegisterRequest
-import com.example.nebulaBackendApp.Model.UserResponse
+import com.example.nebulaBackendApp.Model.userResponse
 import com.example.nebulaBackendApp.Service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/users")
 class UserController(private val userService: UserService) {
 
-    private fun User.toUserResponse(): UserResponse {
-        return UserResponse(
+    private fun User.toUserResponse(): userResponse {
+        return userResponse(
             id = this.id,
             name = this.name,
             email = this.email
