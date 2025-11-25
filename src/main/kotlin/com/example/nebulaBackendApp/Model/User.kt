@@ -1,5 +1,6 @@
 package com.example.nebulaBackendApp.model
 
+import com.example.nebulaBackendApp.Model.Cart
 import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -15,11 +16,15 @@ data class User(
 
     val name: String,
 
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val cart: Cart? = null,
+
     @Column(unique = true)
     val email: String,
 
     // CAMBIO 2: Password debe ser 'var' por convención de JPA/posibles updates.
     var password: String,
+
 
     @Enumerated(EnumType.STRING)
     val role: Role
