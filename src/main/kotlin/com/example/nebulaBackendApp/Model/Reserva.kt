@@ -23,5 +23,6 @@ data class Reserva (
     @Column(nullable = false)
     val hora : LocalTime,
 
-    
+    @Column(nullable = false)
+    val numPersonas: Int
 )
