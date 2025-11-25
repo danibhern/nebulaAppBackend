@@ -1,11 +1,10 @@
 package com.example.nebulaBackendApp.Service
 
-import com.example.nebulaBackendApp.Dto.UserLoginDto
-import com.example.nebulaBackendApp.Dto.UserRegisterDto
 import com.example.nebulaBackendApp.Model.User
 import com.example.nebulaBackendApp.Repository.UserRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.Optional
 
 @Service
 class UserService(
@@ -13,32 +12,41 @@ class UserService(
     private val passwordEncoder: PasswordEncoder
 ) {
 
-    fun register(dto: UserRegisterDto): User? {
-        if (userRepository.findByEmail(dto.email).isPresent) {
-            // El usuario ya existe
-            return null
+    class UserRegistrationException(message: String) : RuntimeException(message)
+
+    fun registerUser(user: User): User {
+        // 1. Verificar si el email ya existe
+        if (userRepository.findByEmail(user.email).isPresent) {
+            throw UserRegistrationException("El email ${user.email} ya está registrado.")
         }
 
-        val newUser = User(
-            name = dto.name,
-            email = dto.email,
-            password = passwordEncoder.encode(dto.password)
-        )
+        // 2. Hashear la contraseña que viene del controlador antes de guardar
+        val hashedPassword = passwordEncoder.encode(user.password)
 
-        return userRepository.save(newUser)
+        // Crea una nueva entidad con la contraseña hasheada, preservando el resto de los datos
+        val userToSave = user.copy(password = hashedPassword)
+
+        // 3. Guardar en la base de datos
+        return userRepository.save(userToSave)
     }
 
-    fun findByEmail(email: String): User? {
-        // Usar el método findByEmail del repositorio
-        return userRepository.findByEmail(email).orElse(null)
-    }
+    fun loginUser(email: String, rawPassword: String): Optional<User> {
+        // 1. Buscar el usuario por email
+        val userOptional = userRepository.findByEmail(email)
 
-    fun login(dto: UserLoginDto): User? {
-        val user = findByEmail(dto.email) ?: return null
+        if (userOptional.isPresent) {
+            val user = userOptional.get()
 
-        if (passwordEncoder.matches(dto.password, user.password)) {
-            return user
+            // 2. Verificar la contraseña hasheada
+            if (passwordEncoder.matches(rawPassword, user.password)) {
+                // Autenticación exitosa
+                return userOptional
+            }
         }
-        return null
+
+        // 3. Autenticación fallida (usuario no encontrado o contraseña incorrecta)
+        return Optional.empty()
     }
+
+    // NOTA: Eliminar o renombrar 'register' y 'login' si existen para evitar ambigüedades.
 }

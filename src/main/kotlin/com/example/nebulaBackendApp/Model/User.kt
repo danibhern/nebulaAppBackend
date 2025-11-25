@@ -1,20 +1,23 @@
 package com.example.nebulaBackendApp.Model
 
 import jakarta.persistence.*
+import java.util.UUID // <--- ¡Esta importación es crucial!
 
-
+/**
+ * Entidad que representa a un usuario en la base de datos.
+ * El 'id' se define como UUID y es la clave primaria.
+ */
 @Entity
 @Table(name = "users")
 data class User(
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0,
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    val id: UUID? = null,
 
-    var name: String,
+    val name: String,
 
     @Column(unique = true)
-    var email: String,
+    val email: String,
 
-    var password: String
+    val password: String
 )
