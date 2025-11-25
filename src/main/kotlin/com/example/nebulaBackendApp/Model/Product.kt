@@ -18,7 +18,15 @@ data class Product(
     var price: Int,
 
     @Column(nullable = true)
-    var imageUrl: String? = null
+    var imageUrl: String? = null,
+
+    @Column(nullable = false)
+    val category:String,
+
+    @Column(nullable = false)
+    val isFavorite :Boolean=false,
+
+
 ) {
-    constructor() : this(0, "", null, 0, null)
+    constructor() : this(0, "", null, 0, null, "",false)
 }

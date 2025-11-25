@@ -5,7 +5,9 @@ data class ProductResponseDTO(
     val name: String,
     val description: String?,
     val price: Int,
-    val imageUrl: String
+    val imageUrl: String?,
+    val category:String,
+    val isFavorite:Boolean
 )
 
 
@@ -15,6 +17,9 @@ fun Product.toResponseDTO(): ProductResponseDTO {
         name = this.name,
         description = this.description,
         price = this.price,
-        imageUrl = this.imageUrl ?: ""
+        imageUrl = this.imageUrl,
+        category = this.category,
+        isFavorite= this.isFavorite
+
     )
 }
