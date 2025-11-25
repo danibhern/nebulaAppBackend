@@ -39,6 +39,18 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-security")
 
+    // Asegúrate que tu archivo build.gradle.kts tiene estas líneas dentro de dependencies { ... }
+
+// JJWT API
+    implementation("io.jsonwebtoken:jjwt-api:0.12.5")
+
+// JJWT Implementation (Necesario en tiempo de ejecución)
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
+
+// JJWT Jackson (Necesario para el parseo de Claims)
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
+
+
     // Pruebas
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
