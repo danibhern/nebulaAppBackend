@@ -9,20 +9,22 @@ import java.util.*
 @Entity
 @Table(name = "users")
 data class User(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
 
     val name: String,
 
     @Column(unique = true)
     val email: String,
 
-    val password: String,
+    // CAMBIO 2: Password debe ser 'var' por convención de JPA/posibles updates.
+    var password: String,
+
     @Enumerated(EnumType.STRING)
     val role: Role
 ) : UserDetails {
 
-    // Método para devolver los permisos del usuario (basado en el Role)
     override fun getAuthorities(): Collection<GrantedAuthority> {
         return listOf(SimpleGrantedAuthority("ROLE_${role.name}"))
     }

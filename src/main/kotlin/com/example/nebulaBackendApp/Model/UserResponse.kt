@@ -1,10 +1,7 @@
 package com.example.nebulaBackendApp.Model
 
-import java.util.*
-
-
-data class userResponse(
-    val id: UUID?,
+data class UserResponse(
+    val id: Long?, // <-- TIPO DE ID CORREGIDO
     val name: String,
     val email: String
 )

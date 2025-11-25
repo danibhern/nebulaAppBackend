@@ -1,11 +1,11 @@
 package com.example.nebulaBackendApp.Controller
 
-
-import com.example.nebulaBackendApp.Model.User
 import com.example.nebulaBackendApp.Model.LoginRequest
 import com.example.nebulaBackendApp.Model.RegisterRequest
-import com.example.nebulaBackendApp.Model.userResponse
+import com.example.nebulaBackendApp.Model.UserResponse
 import com.example.nebulaBackendApp.Service.UserService
+import com.example.nebulaBackendApp.model.User
+import com.example.nebulaBackendApp.model.Role
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/users")
 class UserController(private val userService: UserService) {
 
-    private fun User.toUserResponse(): userResponse {
-        return userResponse(
+    // Función de mapeo DTO: Ahora el Long? de this.id coincide con el Long? de UserResponse
+    private fun User.toUserResponse(): UserResponse {
+        return UserResponse(
             id = this.id,
             name = this.name,
             email = this.email
@@ -26,9 +27,11 @@ class UserController(private val userService: UserService) {
     fun registerUser(@RequestBody request: RegisterRequest): ResponseEntity<*> {
         return try {
             val newUser = User(
+                id = null,
                 name = request.name,
                 email = request.email,
-                password = request.password
+                password = request.password,
+                role = Role.USER
             )
 
             val registeredUser = userService.registerUser(newUser)
