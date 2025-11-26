@@ -1,7 +1,7 @@
 package com.example.nebulaBackendApp.config
 
+import com.example.nebulaBackendApp.Security.UserDetailServiceImpl
 import com.example.nebulaBackendApp.security.JwtAuthenticationFilter
-import com.example.nebulaBackendApp.security.UserDetailServiceImpl
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
