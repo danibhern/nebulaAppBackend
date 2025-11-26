@@ -1,13 +1,13 @@
 package com.example.nebulaBackendApp.Model
 
-import com.example.nebulaBackendApp.Model.Cart
+
 import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import com.fasterxml.jackson.annotation.JsonIgnore // Necesario para ocultar la contraseña en JSON
-import kotlin.jvm.JvmName // Necesario para resolver el conflicto de la JVM con getPassword()
-import java.util.*
+import com.fasterxml.jackson.annotation.JsonIgnore
+import kotlin.jvm.JvmName
+
 
 @Entity
 @Table(name = "users")
