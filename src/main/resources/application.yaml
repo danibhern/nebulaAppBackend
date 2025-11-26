@@ -1,10 +1,21 @@
-spring:
-  application:
-    name: NebulaBackendApp
 
-  jwt:
-    secret-key: NTA3MmNlMzY1MzUwYzZkNDY2ZDQ5YWY0Yzc4MjRjYmRkZGMwN2Q5M2YyYmM1MjI1N2YyNDMwMmMwMmUzYmUw
-    expiration-time: 86400000
+spring:
+  profiles:
+    active: dev
+
+  datasource:
+    url: ${DB_URL:jdbc:h2:mem:fallbackdb}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
 
 server:
-      port: 9090
+  port: 8080

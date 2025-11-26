@@ -1,0 +1,23 @@
+# =========================================================
+# PERFIL DE DESARROLLO/PRUEBAS (usando H2 en memoria)
+# =========================================================
+spring:
+  h2:
+    # La consola H2 permite ver los datos en el navegador (solo para desarrollo)
+    console:
+      enabled: true
+      path: /h2-console
+  datasource:
+    # Usamos una base de datos H2 en memoria para que no falle sin AWS RDS
+    url: jdbc:h2:mem:nebuladb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    # 'create-drop' recrea y borra la DB después de cada test/ejecución
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
