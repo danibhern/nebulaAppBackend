@@ -1,26 +1,8 @@
 spring:
+  # Define el perfil que se activará si no se especifica ninguno al correr la aplicación.
   profiles:
     active: dev
 
-  datasource:
-    # 🚨 CAMBIO CLAVE 1: Usamos el driver de MySQL en lugar de PostgreSQL
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-    # 🚨 CAMBIO CLAVE 2: Usamos el prefijo URL de MySQL.
-    # El valor predeterminado asume que MySQL está en localhost:3306 y la base de datos se llama 'mydatabase'.
-    url: ${DB_URL:jdbc:mysql://localhost:3306/nebula_dbApp?serverTimezone=UTC}
-
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:mypassword}
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.MySQLDialect
-
 server:
+  # Define el puerto del servidor.
   port: 9090
