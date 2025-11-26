@@ -1,5 +1,10 @@
 spring:
   application:
     name: NebulaBackendApp
+
+  jwt:
+    secret-key: NTA3MmNlMzY1MzUwYzZkNDY2ZDQ5YWY0Yzc4MjRjYmRkZGMwN2Q5M2YyYmM1MjI1N2YyNDMwMmMwMmUzYmUw
+    expiration-time: 86400000
+
 server:
       port: 9090
