@@ -1,31 +1,20 @@
 package com.example.nebulaBackendApp.Model
 
-import com.example.nebulaBackendApp.Model.User
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "cart")
-
+@Table(name = "carts")
 data class Cart(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @OneToOne
+    // Relación One-to-One con User
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
 
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
-    @JoinColumn(name = "cart_id")
-    val items: MutableList<CartItem> = mutableListOf(),
-
-    @Column(nullable = false)
-    var subtotal: Int = 0,
-
-    @Column(nullable = false)
-    var shippingMessage: String = "Por Pagar",
-
-    @Column(nullable = false)
-    var grandTotal: Int = 0
-
+    // Relación One-to-Many con CartItem, mapeado por el campo "cart" en CartItem
+    @OneToMany(mappedBy = "cart", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val items: MutableList<CartItem> = mutableListOf()
 )
