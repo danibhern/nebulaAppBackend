@@ -1,0 +1,22 @@
+# ===============================================
+# CONFIGURACIÓN PARA PRODUCCIÓN (SERVER)
+# ===============================================
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/nebula_dbApp?serverTimezone=UTC}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:mypassword}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false  # En producción NO mostramos SQL
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.MySQLDialect
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY:clave-secreta-para-produccion}
+  expiration: ${JWT_EXPIRATION:86400000}

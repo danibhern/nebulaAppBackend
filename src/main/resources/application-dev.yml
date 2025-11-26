@@ -1,34 +1,22 @@
 # ===============================================
-# CONFIGURACIÓN PARA EL PERFIL 'dev'
-# Este perfil se activa con el argumento: --spring.profiles.active=dev
+# CONFIGURACIÓN PARA DESARROLLO LOCAL
 # ===============================================
 spring:
-  # Configuración de la Fuente de Datos (MySQL)
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    # URL de conexión a la base de datos 'nebula_dbApp' en localhost
-    url: ${DB_URL:jdbc:mysql://localhost:3306/nebula_dbApp?serverTimezone=UTC}
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:mypassword}
+    url: jdbc:mysql://localhost:3306/nebula_dbApp?serverTimezone=UTC
+    username: root
+    password: mypassword
 
-  # Configuración de JPA/Hibernate
   jpa:
     hibernate:
-      # 'update' mantiene el esquema existente y solo agrega o modifica tablas nuevas.
       ddl-auto: update
-    show-sql: false # Evita el log de todas las consultas SQL
+    show-sql: true  # En desarrollo SÍ queremos ver SQL
     properties:
       hibernate:
-        format-sql: true # Formatea las sentencias SQL en el log (si show-sql es true)
-        dialect: org.hibernate.dialect.MySQLDialect # Dialecto específico de MySQL
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
 
-# ===============================================
-# CONFIGURACIÓN DE JWT (JSON Web Token)
-# Estas propiedades son necesarias para el servicio de autenticación
-# y deben estar presentes en el perfil activo ('dev').
-# ===============================================
 jwt:
-  # Clave secreta fuerte utilizada para firmar y verificar tokens
-  secret-key: V4gK9cQx7lZ2jP3sB8mY5tH0uF6oR1eD4aW9nI7kE5cM0xT8rL3qA2yB1zA
-  # Tiempo de expiración del token en milisegundos (86400000 ms = 24 horas)
-  expiration-time: 86400000
+  secret-key: "clave-secreta-para-desarrollo-local-123456"
+  expiration: 86400000

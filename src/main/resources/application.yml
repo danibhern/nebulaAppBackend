@@ -1,8 +1,11 @@
 spring:
-  # Define el perfil que se activará si no se especifica ninguno al correr la aplicación.
   profiles:
-    active: dev
+    active: dev  # Por defecto desarrollo
 
 server:
-  # Define el puerto del servidor.
   port: 9090
+
+# Configuración común para TODOS los entornos
+logging:
+  level:
+    com.example.nebulaBackendApp: INFO
