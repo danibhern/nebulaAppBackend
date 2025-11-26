@@ -1,0 +1,27 @@
+# =========================================================
+# PERFIL DE PRUEBAS (Activo al ejecutar tests)
+#
+# Fuerza el uso de la base de datos H2 en memoria para que
+# las pruebas unitarias pasen de forma aislada y rápida.
+# =========================================================
+spring:
+  h2:
+    # Desactivamos la consola H2 en el perfil de pruebas
+    console:
+      enabled: false
+  datasource:
+    # Conexión a H2 en memoria. DB_CLOSE_DELAY=-1 es crucial
+    # para mantener la base de datos viva mientras duran los tests.
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    # 'create-drop' asegura que la base de datos se recree para cada test
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false # Opcional: no mostrar SQL durante las pruebas para no ensuciar el log
+    properties:
+      hibernate:
+        format-sql: false
+        dialect: org.hibernate.dialect.H2Dialect
