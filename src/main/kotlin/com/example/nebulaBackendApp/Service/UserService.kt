@@ -1,7 +1,7 @@
 package com.example.nebulaBackendApp.Service
 
 import com.example.nebulaBackendApp.Repository.UserRepository
-import com.example.nebulaBackendApp.model.User
+import com.example.nebulaBackendApp.Model.User
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.Optional
@@ -33,7 +33,6 @@ class UserService(
             val user = userOptional.get()
 
             if (passwordEncoder.matches(rawPassword, user.password)) {
-                // Autenticación exitosa
                 return userOptional
             }
         }

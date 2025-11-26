@@ -1,7 +1,6 @@
 package com.example.nebulaBackendApp.Security
 
 import com.example.nebulaBackendApp.Repository.UserRepository
-import com.example.nebulaBackendApp.model.User // <-- ¡IMPORTACIÓN CORREGIDA!
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException

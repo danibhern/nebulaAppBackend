@@ -5,7 +5,7 @@ import com.example.nebulaBackendApp.Model.*
 import com.example.nebulaBackendApp.Repository.CartRepository
 import com.example.nebulaBackendApp.Repository.ProductRepository
 import com.example.nebulaBackendApp.Repository.UserRepository
-import com.example.nebulaBackendApp.model.User
+import com.example.nebulaBackendApp.Model.User
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
