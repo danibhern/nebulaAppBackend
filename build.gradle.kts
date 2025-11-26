@@ -12,11 +12,15 @@ group = "com.example"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    // AÑADIDO: Configuración de Toolchain para forzar el uso de Java 17,
-    // resolviendo la incompatibilidad con JDK 25
+    // 1. Establecemos la compatibilidad del código fuente y destino a Java 21 (LTS)
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+
+    // 2. CONFIGURACIÓN CRÍTICA: Definir el Toolchain
+    // Esto le dice a Gradle que descargue y use automáticamente un JDK 21
+    // para compilar, ignorando la versión 25 instalada en el sistema.
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -39,15 +43,13 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-security")
 
-    // Asegúrate que tu archivo build.gradle.kts tiene estas líneas dentro de dependencies { ... }
-
-// JJWT API
+    // JJWT API
     implementation("io.jsonwebtoken:jjwt-api:0.12.5")
 
-// JJWT Implementation (Necesario en tiempo de ejecución)
+    // JJWT Implementation (Necesario en tiempo de ejecución)
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
 
-// JJWT Jackson (Necesario para el parseo de Claims)
+    // JJWT Jackson (Necesario para el parseo de Claims)
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
 
 
@@ -63,7 +65,8 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs += "-Xjsr305=strict"
-        jvmTarget = "17"
+        // 3. Establecemos el target JVM también a 21
+        jvmTarget = "21"
     }
 }
 

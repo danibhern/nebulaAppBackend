@@ -15,13 +15,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import java.util.List
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
-    // Inyectamos el servicio que carga los detalles del usuario
     private val userDetailServiceImpl: UserDetailServiceImpl,
-    // Inyectamos el filtro de JWT que crearemos
     private val jwtAuthenticationFilter: JwtAuthenticationFilter
 ) {
 
@@ -29,6 +31,7 @@ class SecurityConfig(
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
+            .cors { cors -> cors.configurationSource(corsConfigurationSource()) }
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers("/api/auth/**").permitAll()
@@ -37,10 +40,8 @@ class SecurityConfig(
                     .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
 
-                    // Cualquier otra petición requiere autenticación (JWT válido)
                     .anyRequest().authenticated()
             }
-            // 1. Configuración Stateless: NO USAR SESIONES
             .sessionManagement { session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
@@ -52,6 +53,23 @@ class SecurityConfig(
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
+    }
+
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration()
+
+        configuration.allowedOriginPatterns = List.of("*")
+
+        configuration.allowedMethods = List.of("*")
+        configuration.allowedHeaders = List.of("*")
+        configuration.exposedHeaders = List.of("Authorization", "Content-Type")
+        configuration.allowCredentials = true
+
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
     }
 
     @Bean

@@ -1,4 +1,4 @@
-package com.example.nebulaBackendApp.model
+package com.example.nebulaBackendApp.Model
 
 import com.example.nebulaBackendApp.Model.Cart
 import jakarta.persistence.*

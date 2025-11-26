@@ -1,7 +1,7 @@
 package com.example.nebulaBackendApp.Service
 
-import com.example.nebulaBackendApp.Model.User
 import com.example.nebulaBackendApp.Repository.UserRepository
+import com.example.nebulaBackendApp.model.User
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.Optional
