@@ -1,6 +1,5 @@
 package com.example.nebulaBackendApp.security
 
-import com.example.nebulaBackendApp.Security.JwtService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

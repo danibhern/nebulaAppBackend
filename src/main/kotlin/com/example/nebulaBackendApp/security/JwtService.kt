@@ -1,4 +1,4 @@
-package com.example.nebulaBackendApp.Security
+package com.example.nebulaBackendApp.security
 
 import io.jsonwebtoken.Claims // Debe ser esta
 import io.jsonwebtoken.Jwts
