@@ -52,6 +52,8 @@ dependencies {
     // JJWT Jackson (Necesario para el parseo de Claims)
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
 
+    runtimeOnly("mysql:mysql-connector-java:8.0.33")
+
 
     // Pruebas
     testImplementation("org.springframework.boot:spring-boot-starter-test")
