@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev  # Por defecto desarrollo
+    active: dev  # Perfil por defecto
 
 server:
   port: 9090
@@ -9,3 +9,7 @@ server:
 logging:
   level:
     com.example.nebulaBackendApp: INFO
+
+jwt:
+  secret-key: "clave-secreta-para-desarrollo-local-123456"
+  expiration-time: 86400000
