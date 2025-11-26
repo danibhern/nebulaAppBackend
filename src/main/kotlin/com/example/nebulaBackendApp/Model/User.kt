@@ -5,6 +5,8 @@ import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import com.fasterxml.jackson.annotation.JsonIgnore // Necesario para ocultar la contraseña en JSON
+import kotlin.jvm.JvmName // Necesario para resolver el conflicto de la JVM con getPassword()
 import java.util.*
 
 @Entity
@@ -22,9 +24,9 @@ data class User(
     @Column(unique = true)
     val email: String,
 
-    // CAMBIO 2: Password debe ser 'var' por convención de JPA/posibles updates.
+    @field:JsonIgnore
+    @get:JvmName("passwordGetter")
     var password: String,
-
 
     @Enumerated(EnumType.STRING)
     val role: Role
@@ -34,8 +36,8 @@ data class User(
         return listOf(SimpleGrantedAuthority("ROLE_${role.name}"))
     }
 
-
     override fun getUsername(): String = email
+
     override fun getPassword(): String = password
 
     override fun isAccountNonExpired(): Boolean = true
