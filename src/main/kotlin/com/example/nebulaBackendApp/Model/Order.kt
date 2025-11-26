@@ -1,6 +1,6 @@
 package com.example.nebulaBackendApp.Model
 
-import com.example.nebulaBackendApp.model.User
+import com.example.nebulaBackendApp.Model.User
 import jakarta.persistence.*
 import java.math.BigDecimal
 import java.time.LocalDateTime
