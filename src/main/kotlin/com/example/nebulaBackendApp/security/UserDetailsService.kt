@@ -1,4 +1,4 @@
-package com.example.nebulaBackendApp.Security
+package com.example.nebulaBackendApp.security
 
 import com.example.nebulaBackendApp.Repository.UserRepository
 import org.springframework.security.core.userdetails.UserDetails
