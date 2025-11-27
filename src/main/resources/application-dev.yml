@@ -26,3 +26,6 @@ logging:
     org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG        # ✅ CORREGIDO
     org.hibernate.type: TRACE       # ✅ CORREGIDO
+jwt:
+  secret-key: ${JWT_SECRET_KEY:V4gK9cQx7lZ2jP3sB8mY5tH0uF6oR1eD4aW9nI7kE5cM0xT8rL3qA2yB1zA}
+  expiration: ${JWT_EXPIRATION:86400000}
