@@ -15,9 +15,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
 
-  h2:
-    console:
-      enabled: false
+h2:
+  console:
+    enabled: true                   # ⬅️ ACTÍVALO
+    path: /h2-console               # ⬅️ (Opcional pero recomendado)
+    settings:
+      web-allow-others: true        # ⬅️ ESTA ES LA LÍNEA QUE FALTABA
 
 # ✅ CORREGIDO: Usar DEBUG en lugar de "true"
 logging:
