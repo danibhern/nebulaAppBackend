@@ -1,6 +1,5 @@
 package com.example.nebulaBackendApp.config
 
-import com.example.nebulaBackendApp.security.UserDetailServiceImpl
 import com.example.nebulaBackendApp.security.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,6 +9,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -19,7 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import java.util.List
 
 @Configuration
 @EnableWebSecurity
@@ -35,38 +34,88 @@ class SecurityConfig(
             .cors { cors -> cors.configurationSource(corsConfigurationSource()) }
             .authorizeHttpRequests { auth ->
                 auth
+                    // Permite acceso público a autenticación y Swagger
                     .requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers("/h2-console/**").permitAll()
+                    .requestMatchers("/users/register").permitAll()
+                    .requestMatchers("/users/login").permitAll()
+
+                    // Swagger UI - acceso público
+                    .requestMatchers("/swagger-ui.html").permitAll()
+                    .requestMatchers("/swagger-ui/**").permitAll()
+                    .requestMatchers("/v3/api-docs/**").permitAll()
+                    .requestMatchers("/api-docs/**").permitAll()
+                    .requestMatchers("/webjars/**").permitAll()
+                    .requestMatchers("/swagger-resources/**").permitAll()
+
+                    // Endpoints públicos de productos (solo lectura)
+                    .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+
+                    // Endpoints de administrador
+                    .requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
 
+                    // Cualquier otra request requiere autenticación
                     .anyRequest().authenticated()
             }
             .sessionManagement { session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
-            // 2. Necesario para que h2-console funcione en un iframe
             .headers { headers ->
                 headers.frameOptions { it.sameOrigin() }
             }
-            // 3. Añadir nuestro filtro JWT ANTES del filtro de usuario/contraseña de Spring
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
     }
 
+    @Bean
+    fun webSecurityCustomizer(): WebSecurityCustomizer {
+        return WebSecurityCustomizer { web ->
+            web.ignoring().requestMatchers(
+                "/h2-console/**",
+                "/swagger-ui.html",
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/api-docs/**",
+                "/webjars/**"
+            )
+        }
+    }
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
 
-        configuration.allowedOriginPatterns = List.of("*")
+        // Configuración CORS MÁS PERMISIVA para desarrollo
+        configuration.allowedOriginPatterns = listOf("*")
 
-        configuration.allowedMethods = List.of("*")
-        configuration.allowedHeaders = List.of("*")
-        configuration.exposedHeaders = List.of("Authorization", "Content-Type")
+        configuration.allowedMethods = listOf(
+            "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"
+        )
+
+        configuration.allowedHeaders = listOf(
+            "Authorization",
+            "Content-Type",
+            "X-Requested-With",
+            "Accept",
+            "Origin",
+            "Access-Control-Request-Method",
+            "Access-Control-Request-Headers"
+        )
+
+        configuration.exposedHeaders = listOf(
+            "Authorization",
+            "Content-Type",
+            "Content-Disposition"
+        )
+
         configuration.allowCredentials = true
+        configuration.maxAge = 3600L
 
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)

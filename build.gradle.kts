@@ -60,6 +60,8 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation(kotlin("test")) // Añadir esta línea es una buena práctica para pruebas
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+    implementation("org.springdoc:springdoc-openapi-starter-common:2.3.0")
 
     implementation("org.springframework.boot:spring-boot-starter-validation")
 }

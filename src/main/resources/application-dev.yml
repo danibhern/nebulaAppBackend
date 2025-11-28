@@ -1,34 +1,90 @@
 # ===============================================
-# CONFIGURACIÓN PARA DESARROLLO (H2 Database)
+# CONFIGURACIÓN PARA DESARROLLO (Perfil 'dev')
 # ===============================================
+---
 spring:
+  config:
+    activate:
+      on-profile: dev
+
+  # Configuración de Base de Datos H2
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password: ""
 
+  # Configuración de JPA/Hibernate
   jpa:
     hibernate:
       ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+        show_sql: true
+        format_sql: true
+    show-sql: true
+    open-in-view: false
 
+  # Configuración CORS para desarrollo
+  web:
+    cors:
+      allowed-origins: "*"
+      allowed-methods: "*"
+      allowed-headers: "*"
+      allow-credentials: true
+
+  # Configuración del servidor multipart
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# Configuración de la Consola H2
 h2:
   console:
-    enabled: true                   # ⬅️ ACTÍVALO
-    path: /h2-console               # ⬅️ (Opcional pero recomendado)
+    enabled: true
+    path: /h2-console
     settings:
-      web-allow-others: true        # ⬅️ ESTA ES LA LÍNEA QUE FALTABA
+      web-allow-others: true
 
-# ✅ CORREGIDO: Usar DEBUG en lugar de "true"
+# Configuración de Swagger/OpenAPI CORREGIDA
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: alpha    # ✅ VALOR CORRECTO
+    tags-sorter: alpha         # ✅ VALOR CORRECTO
+    display-request-duration: true
+  cache:
+    disabled: true
+
+# Configuración de Logging
 logging:
   level:
     com.example.nebulaBackendApp: DEBUG
     org.springframework.security: DEBUG
-    org.hibernate.SQL: DEBUG        # ✅ CORREGIDO
-    org.hibernate.type: TRACE       # ✅ CORREGIDO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type: TRACE
+    org.springframework.web.cors: DEBUG
+    org.springdoc: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+
+# Configuración de JWT para Desarrollo
 jwt:
   secret-key: ${JWT_SECRET_KEY:V4gK9cQx7lZ2jP3sB8mY5tH0uF6oR1eD4aW9nI7kE5cM0xT8rL3qA2yB1zA}
-  expiration: ${JWT_EXPIRATION:86400000}
+  expiration-time: ${JWT_EXPIRATION:86400000}
+
+# Configuración de management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics"
+  endpoint:
+    health:
+      show-details: always

@@ -19,11 +19,23 @@ class JwtAuthenticationFilter(
     private val userDetailsService: UserDetailsService
 ) : OncePerRequestFilter() {
 
+    // =================================================================
+    // ✅ CORRECCIÓN: Método para que el filtro omita la ruta de H2 Console.
+    // Retorna 'true' si el filtro NO DEBE ejecutarse (lo ignoramos).
+    // =================================================================
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
+        // Ignora cualquier ruta que empiece con /h2-console
+        return request.getRequestURI().startsWith("/h2-console")
+    }
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
+        // Nota: Debido a shouldNotFilter, esta lógica solo se ejecuta para
+        // peticiones que NO van a /h2-console.
+
         val authHeader: String? = request.getHeader("Authorization")
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {

@@ -1,15 +1,16 @@
-spring:
-  profiles:
-    active: dev  # Perfil por defecto
-
+# ===============================================
+# CONFIGURACIÓN PRINCIPAL
+# ===============================================
 server:
   port: 9090
 
-# Configuración común para TODOS los entornos
-logging:
-  level:
-    com.example.nebulaBackendApp: INFO
+spring:
+  profiles:
+    active: dev
 
-jwt:
-  secret-key: "clave-secreta-para-desarrollo-local-123456"
-  expiration-time: 86400000
+  security:
+    filter:
+      dispatcher-types: REQUEST
+
+  application:
+    name: nebula-backend-app
