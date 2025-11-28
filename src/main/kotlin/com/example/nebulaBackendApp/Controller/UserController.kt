@@ -4,12 +4,10 @@ import com.example.nebulaBackendApp.Dto.UserLoginDto
 import com.example.nebulaBackendApp.Dto.UserRegisterDto
 import com.example.nebulaBackendApp.Model.Role
 import com.example.nebulaBackendApp.Model.User
-import com.example.nebulaBackendApp.Model.UserResponse
+import com.example.nebulaBackendApp.security.JwtService
 import com.example.nebulaBackendApp.Service.UserService
+import com.example.nebulaBackendApp.Service.UserService.UserRegistrationException
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.Parameter
-import io.swagger.v3.oas.annotations.responses.ApiResponse
-import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,38 +17,14 @@ import java.util.*
 @RestController
 @RequestMapping("/users")
 @Tag(name = "Users", description = "APIs para gestión de usuarios - registro y autenticación")
-class UserController(private val userService: UserService) {
-
-    private fun User.toUserResponse(): UserResponse {
-        return UserResponse(
-            id = this.id,
-            name = this.name,
-            email = this.email
-        )
-    }
+class UserController(
+    private val userService: UserService,
+    private val jwtService: JwtService
+) {
 
     @PostMapping("/register")
-    @Operation(
-        summary = "Registrar nuevo usuario",
-        description = "Crea una nueva cuenta de usuario en el sistema"
-    )
-    @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "201",
-                description = "Usuario registrado exitosamente"
-            ),
-            ApiResponse(
-                responseCode = "400",
-                description = "Datos de registro inválidos o usuario ya existe"
-            )
-        ]
-    )
+    @Operation(summary = "Registrar nuevo usuario")
     fun registerUser(
-        @Parameter(
-            description = "Datos para registro de nuevo usuario",
-            required = true
-        )
         @RequestBody request: UserRegisterDto
     ): ResponseEntity<*> {
         return try {
@@ -62,38 +36,26 @@ class UserController(private val userService: UserService) {
                 cart = null,
                 role = Role.USER
             )
-
             val registeredUser = userService.registerUser(newUser)
-            val responseDto = registeredUser.toUserResponse()
+            val token = jwtService.generateToken(registeredUser)
+            val responseWithToken = mapOf(
+                "id" to registeredUser.id,
+                "name" to registeredUser.name,
+                "email" to registeredUser.email,
+                "token" to token
+            )
+            ResponseEntity(responseWithToken, HttpStatus.CREATED)
 
-            ResponseEntity(responseDto, HttpStatus.CREATED)
-        } catch (e: RuntimeException) {
-            ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
+        } catch (e: UserRegistrationException) {
+            ResponseEntity(mapOf("message" to e.message), HttpStatus.BAD_REQUEST)
+        } catch (e: Exception) {
+            ResponseEntity(mapOf("message" to "Error interno del servidor: ${e.message}"), HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
 
     @PostMapping("/login")
-    @Operation(
-        summary = "Iniciar sesión",
-        description = "Autentica un usuario con email y contraseña"
-    )
-    @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Login exitoso, retorna datos del usuario"
-            ),
-            ApiResponse(
-                responseCode = "401",
-                description = "Credenciales incorrectas"
-            )
-        ]
-    )
+    @Operation(summary = "Iniciar sesión")
     fun loginUser(
-        @Parameter(
-            description = "Credenciales de acceso",
-            required = true
-        )
         @RequestBody loginRequest: UserLoginDto
     ): ResponseEntity<*> {
         val userOptional: Optional<User> = userService.loginUser(
@@ -103,10 +65,16 @@ class UserController(private val userService: UserService) {
 
         return if (userOptional.isPresent) {
             val user = userOptional.get()
-            val responseDto = user.toUserResponse()
-            ResponseEntity.ok(responseDto)
+            val token = jwtService.generateToken(user)
+            val responseWithToken = mapOf(
+                "id" to user.id,
+                "name" to user.name,
+                "email" to user.email,
+                "token" to token
+            )
+            ResponseEntity.ok(responseWithToken)
         } else {
-            ResponseEntity("Credenciales incorrectas", HttpStatus.UNAUTHORIZED)
+            ResponseEntity(mapOf("message" to "Credenciales incorrectas"), HttpStatus.UNAUTHORIZED)
         }
     }
 }

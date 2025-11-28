@@ -1,7 +1,7 @@
 package com.example.nebulaBackendApp.Service
 
-import com.example.nebulaBackendApp.Repository.UserRepository
 import com.example.nebulaBackendApp.Model.User
+import com.example.nebulaBackendApp.Repository.UserRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.Optional
@@ -16,22 +16,17 @@ class UserService(
 
     fun registerUser(user: User): User {
         if (userRepository.findByEmail(user.email).isPresent) {
-            throw UserRegistrationException("El email ${user.email} ya está registrado.")
+            throw UserRegistrationException("El email '${user.email}' ya está registrado.")
         }
-
         val hashedPassword = passwordEncoder.encode(user.password)
-
         val userToSave = user.copy(password = hashedPassword)
-
         return userRepository.save(userToSave)
     }
 
     fun loginUser(email: String, rawPassword: String): Optional<User> {
         val userOptional = userRepository.findByEmail(email)
-
         if (userOptional.isPresent) {
             val user = userOptional.get()
-
             if (passwordEncoder.matches(rawPassword, user.password)) {
                 return userOptional
             }
